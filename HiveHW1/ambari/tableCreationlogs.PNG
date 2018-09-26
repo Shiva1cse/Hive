@@ -1,0 +1,140 @@
+============================
+Logs for Query 'use hivehw1'
+============================
+
+
+================================================
+Logs for Query 'drop database IF EXISTS HiveHW1'
+================================================
+
+
+========================================
+Logs for Query 'Create database HiveHW1'
+========================================
+
+
+============================
+Logs for Query 'use HiveHW1'
+============================
+
+
+==============================================
+Logs for Query 'drop table IF EXISTS airports'
+==============================================
+
+
+==============================================
+Logs for Query 'drop table IF EXISTS carriers'
+==============================================
+
+
+=============================================
+Logs for Query 'drop table IF EXISTS flights'
+=============================================
+
+
+===================================================
+Logs for Query 'drop table IF EXISTS airports_temp'
+===================================================
+
+
+===================================================
+Logs for Query 'drop table IF EXISTS carriers_temp'
+===================================================
+
+
+==================================================
+Logs for Query 'drop table IF EXISTS flights_temp'
+==================================================
+
+
+========================================================================================================================================================================================================================================================================================================================================================
+Logs for Query 'create table airports_temp (iata string, airport string, city string, state string, country string, lat string, long string)
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde'
+WITH SERDEPROPERTIES (
+   "separatorChar" = ",",
+   "quoteChar"     = "\""
+)STORED as TEXTFILE
+ tblproperties ("skip.header.line.count"="1")'
+========================================================================================================================================================================================================================================================================================================================================================
+
+
+========================================================================================================
+Logs for Query 'LOAD DATA INPATH '/user/shiva/HiveHW1/airports.csv'  overwrite into table airports_temp'
+========================================================================================================
+
+
+=====================================================================================================================
+Logs for Query 'create table airports stored as orc
+LOCATION '/user/hiveHW1/airports' as select * from airports_temp'
+=====================================================================================================================
+
+INFO  : Tez session hasn't been created yet. Opening session
+INFO  : Dag name: create table airports stored...airports_temp(Stage-1)
+INFO  : Status: Running (Executing on YARN cluster with App id application_1528691292565_0066)
+
+INFO  : Moving data to directory /user/hiveHW1/airports from hdfs://sandbox-hdp.hortonworks.com:8020/apps/hive/warehouse/hivehw1.db/.hive-staging_hive_2018-06-12_08-57-33_398_3829726952366695824-107/-ext-10001
+INFO  : Table hivehw1.airports stats: [numFiles=1, numRows=3376, totalSize=93472, rawDataSize=2164016]
+
+=========================================
+Logs for Query 'drop table airports_temp'
+=========================================
+
+
+=======================================================================================================================================================================================================================================================================================
+Logs for Query 'create table carriers_temp (Code string, Description string)
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde'
+WITH SERDEPROPERTIES (
+   "separatorChar" = ",",
+   "quoteChar"     = "\""
+)STORED AS TEXTFILE
+tblproperties ("skip.header.line.count"="1")'
+=======================================================================================================================================================================================================================================================================================
+
+
+=======================================================================================================
+Logs for Query 'LOAD DATA INPATH '/user/shiva/HiveHW1/carriers.csv' overwrite into table carriers_temp'
+=======================================================================================================
+
+
+=====================================================================================================================
+Logs for Query 'create table carriers stored as orc
+LOCATION '/user/hiveHW1/carriers' as select * from carriers_temp'
+=====================================================================================================================
+
+
+=========================================
+Logs for Query 'drop table carriers_temp'
+=========================================
+
+
+=======================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+Logs for Query 'create table flights_temp (Year int, Month int, DayofMonth int, DayOfWeek int, DepTime int, CRSDepTime int, ArrTime int, CRSArrTime int,
+ UniqueCarrier string, FlightNum int, TailNum string, ActualElapsedTime int, CRSElapsedTime int, AirTime int, ArrDelay int, DepDelay int, Origin string,
+  Dest string, Distance int, TaxiIn int, TaxiOut int, Cancelled int, CancellationCode string, Diverted int, CarrierDelay int, WeatherDelay int, NASDelay int, 
+  SecurityDelay int, LateAircraftDelay int)
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde'
+WITH SERDEPROPERTIES (
+   "separatorChar" = ",",
+   "quoteChar"     = "\""
+)STORED AS TEXTFILE
+tblproperties ("skip.header.line.count"="1")'
+=======================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+
+
+==================================================================================================
+Logs for Query 'LOAD DATA INPATH '/user/shiva/HiveHW1/2007.csv' overwrite into table flights_temp'
+==================================================================================================
+
+
+==================================================================================================================
+Logs for Query 'create table flights stored as orc
+LOCATION '/user/hiveHW1/flights' as select * from flights_temp'
+==================================================================================================================
+
+INFO  : Session is already open
+INFO  : Dag name: create table flights stored a...flights_temp(Stage-1)
+INFO  : Status: Running (Executing on YARN cluster with App id application_1528691292565_0066)
+
+INFO  : Moving data to directory /user/hiveHW1/flights from hdfs://sandbox-hdp.hortonworks.com:8020/apps/hive/warehouse/hivehw1.db/.hive-staging_hive_2018-06-12_08-57-51_502_3696150435749370788-107/-ext-10001
+INFO  : Table hivehw1.flights stats: [numFiles=1, numRows=7453215, totalSize=99453180, rawDataSize=18573411780]

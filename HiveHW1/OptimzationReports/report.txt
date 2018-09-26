@@ -1,0 +1,13 @@
+Executing the following query:
+select carry.description, count(*) count from flights flight join carriers carry on carry.code = flight.uniquecarrier group by carry.description order by count desc limit 1;
+
+Without optimization:
+This is less efficient becuase this will not do the best way efficent execution
+It took 19 seconds to execute this query.
+
+With Optimization:
+Vectorization: It will read the 1024 rows at a time where as normal execution reads only 1 row. Reduces the CPU usage for typical query operations like scans, filters, aggregates, and joins.
+It took 14 seconds to execute this query.
+
+CBO: This will check the tables and the conditions in the query and then uses the efficient method of the exeuction.Internally this query will be parsed to a tree format.
+It took 11 seconds to execute this query.

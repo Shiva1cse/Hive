@@ -1,0 +1,242 @@
+[root@sandbox-hdp shiva]# bash queries.sh beeline                                                                                                                                                                  
+beeline> !connect jdbc:hive2://localhost:10000 root Ni76yd@933                                                                                                                                                     
+Connecting to jdbc:hive2://localhost:10000                                                                                                                                                                         
+Connected to: Apache Hive (version 1.2.1000.2.6.4.0-91)                                                                                                                                                            
+Driver: Hive JDBC (version 1.2.1000.2.6.4.0-91)                                                                                                                                                                    
+Transaction isolation: TRANSACTION_REPEATABLE_READ                                                                                                                                                                 
+0: jdbc:hive2://localhost:10000> set hive.vectorized.execution.enabled = true;                                                                                                                                     
+No rows affected (0.054 seconds)                                                                                                                                                                                   
+0: jdbc:hive2://localhost:10000> drop database IF EXISTS HiveHW1;                                                                                                                                                  
+No rows affected (0.39 seconds)                                                                                                                                                                                    
+0: jdbc:hive2://localhost:10000> Create database HiveHW1;                                                                                                                                                          
+No rows affected (0.319 seconds)                                                                                                                                                                                   
+0: jdbc:hive2://localhost:10000> use HiveHW1;                                                                                                                                                                      
+No rows affected (0.268 seconds)                                                                                                                                                                                   
+0: jdbc:hive2://localhost:10000> drop table IF EXISTS airports;                                                                                                                                                    
+No rows affected (0.246 seconds)                                                                                                                                                                                   
+0: jdbc:hive2://localhost:10000> drop table IF EXISTS carriers;                                                                                                                                                    
+No rows affected (0.236 seconds)                                                                                                                                                                                   
+0: jdbc:hive2://localhost:10000> drop table IF EXISTS flights;                                                                                                                                                     
+No rows affected (0.253 seconds)                                                                                                                                                                                   
+0: jdbc:hive2://localhost:10000> drop table IF EXISTS airports_temp;                                                                                                                                               
+No rows affected (0.257 seconds)                                                                                                                                                                                   
+0: jdbc:hive2://localhost:10000> drop table IF EXISTS carriers_temp;                                                                                                                                               
+No rows affected (0.223 seconds)                                                                                                                                                                                   
+0: jdbc:hive2://localhost:10000> drop table IF EXISTS flights_temp;                                                                                                                                                
+No rows affected (0.256 seconds)                                                                                                                                                                                   
+0: jdbc:hive2://localhost:10000>                                                                                                                                                                                   
+0: jdbc:hive2://localhost:10000> create table airports_temp (iata string, airport string, city string, state string, country string, lat string, long string)                                                      
+0: jdbc:hive2://localhost:10000> ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde'                                                                                                                     
+0: jdbc:hive2://localhost:10000> WITH SERDEPROPERTIES (                                                                                                                                                            
+0: jdbc:hive2://localhost:10000>    "separatorChar" = ",",                                                                                                                                                         
+0: jdbc:hive2://localhost:10000>    "quoteChar"     = "\""                                                                                                                                                         
+0: jdbc:hive2://localhost:10000> )STORED as TEXTFILE                                                                                                                                                               
+0: jdbc:hive2://localhost:10000>  tblproperties ("skip.header.line.count"="1");                                                                                                                                    
+No rows affected (0.4 seconds)                                                                                                                                                                                     
+0: jdbc:hive2://localhost:10000> LOAD DATA INPATH '/user/shiva/HiveHW1/airports.csv'  overwrite into table airports_temp;                                                                                          
+INFO  : Loading data to table hivehw1.airports_temp from hdfs://sandbox-hdp.hortonworks.com:8020/user/shiva/HiveHW1/airports.csv                                                                                   
+INFO  : Table hivehw1.airports_temp stats: [numFiles=1, numRows=0, totalSize=244438, rawDataSize=0]                                                                                                                
+No rows affected (0.601 seconds)                                                                                                                                                                                   
+0: jdbc:hive2://localhost:10000>                                                                                                                                                                                   
+0: jdbc:hive2://localhost:10000> create table airports stored as orc                                                                                                                                               
+0: jdbc:hive2://localhost:10000> LOCATION '/user/hiveHW1/airports' as select * from airports_temp;                                                                                                                 
+INFO  : Tez session hasn't been created yet. Opening session                                                                                                                                                       
+INFO  : Dag name: create table airports stored...airports_temp(Stage-1)                                                                                                                                            
+INFO  : Status: Running (Executing on YARN cluster with App id application_1528691292565_0041)                                                                                                                     
+                                                                                                                                                                                                                   
+--------------------------------------------------------------------------------
+        VERTICES      STATUS  TOTAL  COMPLETED  RUNNING  PENDING  FAILED  KILLED
+--------------------------------------------------------------------------------
+Map 1 ..........   SUCCEEDED      1          1        0        0       0       0
+--------------------------------------------------------------------------------
+VERTICES: 01/01  [==========================>>] 100%  ELAPSED TIME: 5.58 s     
+--------------------------------------------------------------------------------
+INFO  : Moving data to directory /user/hiveHW1/airports from hdfs://sandbox-hdp.hortonworks.com:8020/apps/hive/warehouse/hivehw1.db/.hive-staging_hive_2018-06-12_06-40-38_516_5622058564447134579-45/-ext-10001   
+INFO  : Table hivehw1.airports stats: [numFiles=1, numRows=3376, totalSize=93472, rawDataSize=2164016]                                                                                                             
+No rows affected (11.385 seconds)                                                                                                                                                                                  
+0: jdbc:hive2://localhost:10000> drop table airports_temp;                                                                                                                                                         
+No rows affected (0.47 seconds)                                                                                                                                                                                    
+0: jdbc:hive2://localhost:10000>                                                                                                                                                                                   
+0: jdbc:hive2://localhost:10000> create table carriers_temp (Code string, Description string)                                                                                                                      
+0: jdbc:hive2://localhost:10000> ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde'                                                                                                                     
+0: jdbc:hive2://localhost:10000> WITH SERDEPROPERTIES (                                                                                                                                                            
+0: jdbc:hive2://localhost:10000>    "separatorChar" = ",",                                                                                                                                                         
+0: jdbc:hive2://localhost:10000>    "quoteChar"     = "\""                                                                                                                                                         
+0: jdbc:hive2://localhost:10000> )STORED AS TEXTFILE                                                                                                                                                               
+0: jdbc:hive2://localhost:10000> tblproperties ("skip.header.line.count"="1");                                                                                                                                     
+No rows affected (0.369 seconds)                                                                                                                                                                                   
+0: jdbc:hive2://localhost:10000> LOAD DATA INPATH '/user/shiva/HiveHW1/carriers.csv' overwrite into table carriers_temp;                                                                                           
+INFO  : Loading data to table hivehw1.carriers_temp from hdfs://sandbox-hdp.hortonworks.com:8020/user/shiva/HiveHW1/carriers.csv                                                                                   
+INFO  : Table hivehw1.carriers_temp stats: [numFiles=1, numRows=0, totalSize=43758, rawDataSize=0]                                                                                                                 
+No rows affected (0.343 seconds)                                                                                                                                                                                   
+0: jdbc:hive2://localhost:10000>                                                                                                                                                                                   
+0: jdbc:hive2://localhost:10000> create table carriers stored as orc                                                                                                                                               
+0: jdbc:hive2://localhost:10000> LOCATION '/user/hiveHW1/carriers' as select * from carriers_temp;                                                                                                                 
+INFO  : Session is already open                                                                                                                                                                                    
+INFO  : Dag name: create table carriers stored...carriers_temp(Stage-1)                                                                                                                                            
+INFO  : Status: Running (Executing on YARN cluster with App id application_1528691292565_0041)                                                                                                                     
+                                                                                                                                                                                                                   
+INFO  : Moving data to directory /user/hiveHW1/carriers from hdfs://sandbox-hdp.hortonworks.com:8020/apps/hive/warehouse/hivehw1.db/.hive-staging_hive_2018-06-12_06-40-51_123_8911481726586372662-45/-ext-10001   
+INFO  : Table hivehw1.carriers stats: [numFiles=1, numRows=1491, totalSize=16228, rawDataSize=281799]                                                                                                              
+No rows affected (0.954 seconds)                                                                                                                                                                                   
+0: jdbc:hive2://localhost:10000>                                                                                                                                                                                   
+0: jdbc:hive2://localhost:10000> drop table carriers_temp;                                                                                                                                                         
+No rows affected (0.31 seconds)                                                                                                                                                                                    
+0: jdbc:hive2://localhost:10000> create table flights_temp (Year int, Month int, DayofMonth int, DayOfWeek int, DepTime int, CRSDepTime int, ArrTime int, CRSArrTime int,                                          
+0: jdbc:hive2://localhost:10000>  UniqueCarrier string, FlightNum int, TailNum string, ActualElapsedTime int, CRSElapsedTime int, AirTime int, ArrDelay int, DepDelay int, Origin string,                          
+0: jdbc:hive2://localhost:10000>   Dest string, Distance int, TaxiIn int, TaxiOut int, Cancelled int, CancellationCode string, Diverted int, CarrierDelay int, WeatherDelay int, NASDelay int,                     
+0: jdbc:hive2://localhost:10000>   SecurityDelay int, LateAircraftDelay int)                                                                                                                                       
+0: jdbc:hive2://localhost:10000> ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde'                                                                                                                     
+0: jdbc:hive2://localhost:10000> WITH SERDEPROPERTIES (                                                                                                                                                            
+0: jdbc:hive2://localhost:10000>    "separatorChar" = ",",                                                                                                                                                         
+0: jdbc:hive2://localhost:10000>    "quoteChar"     = "\""                                                                                                                                                         
+0: jdbc:hive2://localhost:10000> )STORED AS TEXTFILE                                                                                                                                                               
+0: jdbc:hive2://localhost:10000> tblproperties ("skip.header.line.count"="1");                                                                                                                                     
+No rows affected (0.451 seconds)                                                                                                                                                                                   
+0: jdbc:hive2://localhost:10000> LOAD DATA INPATH '/user/shiva/HiveHW1/2007.csv' overwrite into table flights_temp;                                                                                                
+INFO  : Loading data to table hivehw1.flights_temp from hdfs://sandbox-hdp.hortonworks.com:8020/user/shiva/HiveHW1/2007.csv                                                                                        
+INFO  : Table hivehw1.flights_temp stats: [numFiles=1, numRows=0, totalSize=702878193, rawDataSize=0]                                                                                                              
+No rows affected (0.569 seconds)                                                                                                                                                                                   
+0: jdbc:hive2://localhost:10000>                                                                                                                                                                                   
+0: jdbc:hive2://localhost:10000> create table flights stored as orc                                                                                                                                                
+0: jdbc:hive2://localhost:10000> LOCATION '/user/hiveHW1/flights' as select * from flights_temp;                                                                                                                   
+INFO  : Session is already open                                                                                                                                                                                    
+INFO  : Dag name: create table flights stored a...flights_temp(Stage-1)                                                                                                                                            
+INFO  : Status: Running (Executing on YARN cluster with App id application_1528691292565_0041)                                                                                                                     
+                                                                                                                                                                                                                   
+--------------------------------------------------------------------------------
+        VERTICES      STATUS  TOTAL  COMPLETED  RUNNING  PENDING  FAILED  KILLED
+--------------------------------------------------------------------------------
+Map 1 ..........   SUCCEEDED      1          1        0        0       0       0
+--------------------------------------------------------------------------------
+VERTICES: 01/01  [==========================>>] 100%  ELAPSED TIME: 121.84 s   
+--------------------------------------------------------------------------------
+INFO  : Moving data to directory /user/hiveHW1/flights from hdfs://sandbox-hdp.hortonworks.com:8020/apps/hive/warehouse/hivehw1.db/.hive-staging_hive_2018-06-12_06-40-53_457_8878972153946186095-45/-ext-10001    
+INFO  : Table hivehw1.flights stats: [numFiles=1, numRows=7453215, totalSize=99453180, rawDataSize=18573411780]                                                                                                    
+No rows affected (122.346 seconds)                                                                                                                                                                                 
+0: jdbc:hive2://localhost:10000> drop table flights_temp;                                                                                                                                                          
+No rows affected (0.338 seconds)                                                                                                                                                                                   
+0: jdbc:hive2://localhost:10000>                                                                                                                                                                                   
+0: jdbc:hive2://localhost:10000> use HiveHW1;                                                                                                                                                                      
+No rows affected (0.246 seconds)                                                                                                                                                                                   
+0: jdbc:hive2://localhost:10000> select carry.description, count(*) from flights flight join carriers carry on carry.code = flight.uniquecarrier where year = 2007 group by carry.description;                     
+INFO  : Session is already open                                                                                                                                                                                    
+INFO  : Dag name: select carry.description...carry.description(Stage-1)                                                                                                                                            
+INFO  : Setting tez.task.scale.memory.reserve-fraction to 0.30000001192092896                                                                                                                                      
+INFO  : Status: Running (Executing on YARN cluster with App id application_1528691292565_0041)                                                                                                                     
+                                                                                                                                                                                                                   
+--------------------------------------------------------------------------------
+        VERTICES      STATUS  TOTAL  COMPLETED  RUNNING  PENDING  FAILED  KILLED
+--------------------------------------------------------------------------------
+Map 1 ..........   SUCCEEDED      1          1        0        0       0       0
+Map 3 ..........   SUCCEEDED      1          1        0        0       0       0                                                                                                                                   
+Reducer 2 ......   SUCCEEDED     20         20        0        0       0       0                                                                                                                                   
+--------------------------------------------------------------------------------
+VERTICES: 03/03  [==========================>>] 100%  ELAPSED TIME: 10.12 s    
+--------------------------------------------------------------------------------
++--------------------------------------------------------------------------------------+----------+--+                                                                                                             
+|                                  carry.description                                   |   _c1    |                                                                                                                
++--------------------------------------------------------------------------------------+----------+--+                                                                                                             
+| Mesa Airlines Inc.                                                                   | 294362   |                                                                                                                
+| Atlantic Southeast Airlines                                                          | 286234   |                                                                                                                
+| American Airlines Inc.                                                               | 633857   |                                                                                                                
+| JetBlue Airways                                                                      | 191450   |                                                                                                                
+| Alaska Airlines Inc.                                                                 | 160185   |                                                                                                                
+| United Air Lines Inc.                                                                | 490002   |                                                                                                                
+| AirTran Airways Corporation                                                          | 263159   |                                                                                                                
+| Aloha Airlines Inc.                                                                  | 46360    |                                                                                                                
+| Frontier Airlines Inc.                                                               | 97760    |                                                                                                                
+| American Eagle Airlines Inc.                                                         | 540494   |                                                                                                                
+| Delta Air Lines Inc.                                                                 | 475889   |                                                                                                                
+| Pinnacle Airlines Inc.                                                               | 258851   |                                                                                                                
+| Continental Air Lines Inc.                                                           | 323151   |                                                                                                                
+| Hawaiian Airlines Inc.                                                               | 56175    |                                                                                                                
+| Northwest Airlines Inc.                                                              | 414526   |                                                                                                                
+| US Airways Inc. (Merged with America West 9/05. Reporting for both starting 10/07.)  | 485447   |                                                                                                                
+| Skywest Airlines Inc.                                                                | 597882   |                                                                                                                
+| Southwest Airlines Co.                                                               | 1168871  |                                                                                                                
+| Expressjet Airlines Inc.                                                             | 434773   |                                                                                                                
+| Comair Inc.                                                                          | 233787   |                                                                                                                
++--------------------------------------------------------------------------------------+----------+--+                                                                                                             
+20 rows selected (10.905 seconds)                                                                                                                                                                                  
+0: jdbc:hive2://localhost:10000>                                                                                                                                                                                   
+0: jdbc:hive2://localhost:10000> select count(*) from (select * from flights where year = 2007 and month = 6) flight join airports airport1 on airport1.iata = flight.origin join airports airport2 on airport2.iat
+a = flight.dest where (airport1.city = 'New York' or airport2.city = 'New York');
+INFO  : Session is already open                                                                                                                                                                                    
+INFO  : Dag name: select count(*) from (select * from...York')(Stage-1)                                                                                                                                            
+INFO  : Setting tez.task.scale.memory.reserve-fraction to 0.30000001192092896                                                                                                                                      
+INFO  : Status: Running (Executing on YARN cluster with App id application_1528691292565_0041)                                                                                                                     
+                                                                                                                                                                                                                   
++--------+--+                                                                                                                                                                                                      
+|  _c0   |                                                                                                                                                                                                         
++--------+--+                                                                                                                                                                                                      
+| 41280  |                                                                                                                                                                                                         
++--------+--+                                                                                                                                                                                                      
+1 row selected (3.43 seconds)                                                                                                                                                                                      
+0: jdbc:hive2://localhost:10000>                                                                                                                                                                                   
+0: jdbc:hive2://localhost:10000> select airport1.airport, sum(flight1.count) total from(                                                                                                                           
+0: jdbc:hive2://localhost:10000> select airport.iata, count(*) count from flights flight join airports airport on airport.iata = flight.origin where flight.year = 2007 and flight.month between 6 and 8 group by a
+irport.iata
+0: jdbc:hive2://localhost:10000> union all                                                                                                                                                                         
+0: jdbc:hive2://localhost:10000> select airport.iata, count(*) cnt from flights flight join airports airport on airport.iata = flight.dest where flight.year = 2007 and flight.month between 6 and 8 group by airpo
+rt.iata)
+0: jdbc:hive2://localhost:10000> flight1 join airports airport1 on airport1.iata = flight1.iata group by airport1.airport order by total desc limit 5;                                                             
+INFO  : Session is already open                                                                                                                                                                                    
+INFO  : Dag name: select airport1.airport, sum(flight1.cou...5(Stage-1)                                                                                                                                            
+INFO  : Setting tez.task.scale.memory.reserve-fraction to 0.30000001192092896                                                                                                                                      
+INFO  : Setting tez.task.scale.memory.reserve-fraction to 0.30000001192092896                                                                                                                                      
+INFO  : Setting tez.task.scale.memory.reserve-fraction to 0.30000001192092896                                                                                                                                      
+INFO  : Setting tez.task.scale.memory.reserve-fraction to 0.30000001192092896                                                                                                                                      
+INFO  : Status: Running (Executing on YARN cluster with App id application_1528691292565_0041)                                                                                                                     
+                                                                                                                                                                                                                   
+--------------------------------------------------------------------------------
+        VERTICES      STATUS  TOTAL  COMPLETED  RUNNING  PENDING  FAILED  KILLED
+--------------------------------------------------------------------------------
+Map 1 ..........   SUCCEEDED      1          1        0        0       0       0
+Map 10 .........   SUCCEEDED      1          1        0        0       0       0                                                                                                                                   
+Map 6 ..........   SUCCEEDED      1          1        0        0       0       0                                                                                                                                   
+Map 7 ..........   SUCCEEDED      1          1        0        0       0       0                                                                                                                                   
+Map 9 ..........   SUCCEEDED      1          1        0        0       0       0                                                                                                                                   
+Reducer 2 ......   SUCCEEDED     10         10        0        0       0       0                                                                                                                                   
+Reducer 4 ......   SUCCEEDED     11         11        0        0       0       0                                                                                                                                   
+Reducer 5 ......   SUCCEEDED      1          1        0        0       0       0                                                                                                                                   
+Reducer 8 ......   SUCCEEDED     10         10        0        0       0       0                                                                                                                                   
+--------------------------------------------------------------------------------
+VERTICES: 09/09  [==========================>>] 100%  ELAPSED TIME: 17.40 s    
+--------------------------------------------------------------------------------
++------------------------------------+---------+--+                                                                                                                                                                
+|          airport1.airport          |  total  |                                                                                                                                                                   
++------------------------------------+---------+--+                                                                                                                                                                
+| William B Hartsfield-Atlanta Intl  | 220506  |                                                                                                                                                                   
+| Chicago O'Hare International       | 192043  |                                                                                                                                                                   
+| Dallas-Fort Worth International    | 152380  |                                                                                                                                                                   
+| Denver Intl                        | 126196  |                                                                                                                                                                   
+| Los Angeles International          | 122914  |                                                                                                                                                                   
++------------------------------------+---------+--+                                                                                                                                                                
+5 rows selected (18.721 seconds)                                                                                                                                                                                   
+0: jdbc:hive2://localhost:10000>                                                                                                                                                                                   
+0: jdbc:hive2://localhost:10000> select carry.description, count(*) count from flights flight join carriers carry on carry.code = flight.uniquecarrier group by carry.description order by count desc limit 1;     
+INFO  : Session is already open                                                                                                                                                                                    
+INFO  : Dag name: select carry.description, count(*) count...1(Stage-1)                                                                                                                                            
+INFO  : Setting tez.task.scale.memory.reserve-fraction to 0.30000001192092896                                                                                                                                      
+INFO  : Status: Running (Executing on YARN cluster with App id application_1528691292565_0041)                                                                                                                     
+                                                                                                                                                                                                                   
+--------------------------------------------------------------------------------
+        VERTICES      STATUS  TOTAL  COMPLETED  RUNNING  PENDING  FAILED  KILLED
+--------------------------------------------------------------------------------
+Map 1 ..........   SUCCEEDED      1          1        0        0       0       0
+Map 4 ..........   SUCCEEDED      1          1        0        0       0       0                                                                                                                                   
+Reducer 2 ......   SUCCEEDED     39         39        0        0       0       0                                                                                                                                   
+Reducer 3 ......   SUCCEEDED      1          1        0        0       0       0                                                                                                                                   
+--------------------------------------------------------------------------------
+VERTICES: 04/04  [==========================>>] 100%  ELAPSED TIME: 14.70 s    
+--------------------------------------------------------------------------------
++-------------------------+----------+--+                                                                                                                                                                          
+|    carry.description    |  count   |                                                                                                                                                                             
++-------------------------+----------+--+                                                                                                                                                                          
+| Southwest Airlines Co.  | 1168871  |                                                                                                                                                                             
++-------------------------+----------+--+                                                                                                                                                                          
+1 row selected (16.573 seconds)                                                                                                                                                                                    
+0: jdbc:hive2://localhost:10000>                                                                                                                                                                                   
+0: jdbc:hive2://localhost:10000>                                                                                                                                                                                   
+Closing: 0: jdbc:hive2://localhost:10000
