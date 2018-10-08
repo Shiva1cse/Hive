@@ -1,0 +1,8 @@
+Optimization techniques has executed the query very quickly
+Normal execution: It took 50 seconds to run the query.
+
+Vectorization: It took 28 seconds to run the query.
+As vectorization reads 1024 rows at a time and we need to read the many rows in this table so this has the very less execution time.
+
+CBO: It took 35 seconds to run the query.
+

@@ -1,0 +1,12 @@
+Total 6 jobs created:
+
+For table creation 3 job:                                                                                                                                                                                                                                                     
+Starting Job = job_1529312310766_0026, Tracking URL = http://sandbox-hdp.hortonworks.com:8088/proxy/application_1529312310766_0026/ 
+Starting Job = job_1529312310766_0027, Tracking URL = http://sandbox-hdp.hortonworks.com:8088/proxy/application_1529312310766_0027/
+Starting Job = job_1529312310766_0028, Tracking URL = http://sandbox-hdp.hortonworks.com:8088/proxy/application_1529312310766_0028/
+
+
+For query execution 3 jobs:
+Starting Job = job_1529312310766_0029, Tracking URL = http://sandbox-hdp.hortonworks.com:8088/proxy/application_1529312310766_0029/
+Starting Job = job_1529312310766_0030, Tracking URL = http://sandbox-hdp.hortonworks.com:8088/proxy/application_1529312310766_0030/
+Starting Job = job_1529312310766_0031, Tracking URL = http://sandbox-hdp.hortonworks.com:8088/proxy/application_1529312310766_0031/ 
