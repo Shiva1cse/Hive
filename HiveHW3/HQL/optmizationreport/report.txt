@@ -1,0 +1,7 @@
+Optimization report:
+
+Vectorization : By this the query has been executed in the 45 seconds.
+
+Normal: Without optimization technique query executed in 49 seconds.
+
+CBO:With this the Query executed in 49 seconds.
